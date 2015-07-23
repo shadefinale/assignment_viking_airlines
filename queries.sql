@@ -49,3 +49,39 @@ FROM users JOIN itineraries ON (users.id = itineraries.user_id)
            JOIN airports ON (flights.origin_id = airports.id OR
                              flights.destination_id = airports.id)
 WHERE users.first_name ilike 'Dannie' AND users.last_name ilike 'D''Amore' AND flights.departure_time > '2012-1-1'
+
+-- Find the most popular travel destination for users who live in Kansas.
+
+SELECT airports.long_name, count(airports.long_name) as count
+FROM users JOIN itineraries ON (users.id = itineraries.user_id)
+           JOIN tickets ON (tickets.itinerary_id = itineraries.id)
+           JOIN flights ON (tickets.flight_id = flights.id)
+           JOIN airports ON (flights.origin_id = airports.id OR
+                             flights.destination_id = airports.id)
+           JOIN states ON (states.id = users.state_id)
+WHERE states.name = 'Kansas'
+GROUP BY airports.long_name
+ORDER BY count
+
+-- How many flights have round trips possible? In other words, we want the count of all airports where there exists a flight FROM that airport and a later flight TO that airport.
+
+-- "SELECT a.id, b.id, a.origin_id, b.destination_id
+-- FROM flights a JOIN flights b ON (a.destination_id = b.destination_id) AND (a.origin_id = b.origin_id)
+-- WHERE a.origin_id = b.destination_id
+-- ORDER BY 1"
+
+
+-- Flights A    FLIGHTs B
+-- origin dest   orig  dest
+-- 1     2      3    4
+-- 2    1      
+
+
+
+
+
+
+
+
+
+
