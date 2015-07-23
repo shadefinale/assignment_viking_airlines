@@ -74,14 +74,20 @@ ORDER BY count
 -- Flights A    FLIGHTs B
 -- origin dest   orig  dest
 -- 1     2      3    4
--- 2    1      
+-- 2    1
 
+SELECT count(*) FROM flights a, flights b WHERE (a.origin_id = b.destination_id
+  AND b.origin_id = a.destination_id) AND a.id != b.id
+  AND (a.arrival_time < b.departure_time OR b.arrival_time < a.departure_time) ORDER BY 1
 
+-- 5 expensive cali flights
 
+SELECT price FROM flights JOIN airports ON (flights.destination_id = airports.id)
+                          JOIN states ON (airports.state_id = states.id)
+                          WHERE states.name = 'California'ORDER BY 1 Desc  LIMIT 5
 
-
-
-
-
-
-
+SELECT airports.long_name, flights.departure_time
+FROM users JOIN itineraries ON (users.id = itineraries.user_id)
+           JOIN tickets ON (tickets.itinerary_id = itineraries.id)
+           JOIN flights ON (tickets.flight_id = flights.id)
+WHERE users.id = 132
